@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma.js';
  * Sync (create or update) the local CentralHub user profile from Clerk.
  * On FIRST login, seeds a UserPlatformPreference row (isVisible: true) for
  * every currently-active platform. Platforms created later are intentionally
- * NOT back-filled — a missing preference row means "not on my dashboard".
+ * NOT back-filled - a missing preference row means "not on my dashboard".
  *
  * @param {string} clerkUserId
  * @param {boolean} isAdmin - resolved from the Clerk org role by the caller

@@ -33,7 +33,7 @@ async function uniqueSlug(base, ignoreId = null) {
 
 /* -------------------------------- Platforms ------------------------------- */
 
-// GET /api/admin/platforms — all platforms including inactive.
+// GET /api/admin/platforms - all platforms including inactive.
 router.get('/platforms', async (_req, res) => {
   const platforms = await prisma.platform.findMany({
     include: { category: true },
@@ -42,7 +42,7 @@ router.get('/platforms', async (_req, res) => {
   res.json({ platforms });
 });
 
-// POST /api/admin/platforms — create.
+// POST /api/admin/platforms - create.
 router.post('/platforms', validateRequest(platformCreateSchema), async (req, res) => {
   const admin = await ensureUser(req);
   const category = await prisma.category.findUnique({ where: { id: req.body.categoryId } });
@@ -62,7 +62,7 @@ router.post('/platforms', validateRequest(platformCreateSchema), async (req, res
   res.status(201).json({ platform });
 });
 
-// PUT /api/admin/platforms/:id — update.
+// PUT /api/admin/platforms/:id - update.
 router.put(
   '/platforms/:id',
   validateRequest(idParamSchema, 'params'),
@@ -95,7 +95,7 @@ router.put(
   }
 );
 
-// DELETE /api/admin/platforms/:id — soft-delete (isActive: false).
+// DELETE /api/admin/platforms/:id - soft-delete (isActive: false).
 router.delete('/platforms/:id', validateRequest(idParamSchema, 'params'), async (req, res) => {
   const admin = await ensureUser(req);
   const { id } = req.params;
@@ -115,13 +115,13 @@ router.delete('/platforms/:id', validateRequest(idParamSchema, 'params'), async 
 
 /* ---------------------------------- Users --------------------------------- */
 
-// GET /api/admin/users — all CentralHub users.
+// GET /api/admin/users - all CentralHub users.
 router.get('/users', async (_req, res) => {
   const users = await prisma.user.findMany({ orderBy: { createdAt: 'asc' } });
   res.json({ users });
 });
 
-// PUT /api/admin/users/:id/role — change cached role.
+// PUT /api/admin/users/:id/role - change cached role.
 // NOTE: authoritative admin status lives in Clerk; this updates the local
 // cache only. Real role changes should also be made in the Clerk dashboard.
 router.put(
@@ -146,7 +146,7 @@ router.put(
   }
 );
 
-// DELETE /api/admin/users/:id — deactivate (isActive: false).
+// DELETE /api/admin/users/:id - deactivate (isActive: false).
 router.delete('/users/:id', validateRequest(idParamSchema, 'params'), async (req, res) => {
   const admin = await ensureUser(req);
   const { id } = req.params;
@@ -169,7 +169,7 @@ router.delete('/users/:id', validateRequest(idParamSchema, 'params'), async (req
 
 /* -------------------------------- Categories ------------------------------ */
 
-// POST /api/admin/categories — create.
+// POST /api/admin/categories - create.
 router.post('/categories', validateRequest(categoryCreateSchema), async (req, res) => {
   const admin = await ensureUser(req);
   const slug = slugify(req.body.name);
@@ -186,7 +186,7 @@ router.post('/categories', validateRequest(categoryCreateSchema), async (req, re
   res.status(201).json({ category });
 });
 
-// PUT /api/admin/categories/:id — update.
+// PUT /api/admin/categories/:id - update.
 router.put(
   '/categories/:id',
   validateRequest(idParamSchema, 'params'),

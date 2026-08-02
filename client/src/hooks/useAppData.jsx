@@ -99,7 +99,7 @@ export function AppDataProvider({ children }) {
         const { recentlyUsed } = await api.get('/recently-used');
         setState((s) => ({ ...s, recentlyUsed }));
       } catch {
-        // Non-critical — opening the platform still succeeds.
+        // Non-critical - opening the platform still succeeds.
       }
     },
     [api]

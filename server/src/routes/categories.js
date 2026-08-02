@@ -4,7 +4,7 @@ import { prisma } from '../lib/prisma.js';
 
 const router = Router();
 
-// GET /api/categories — all categories, ordered.
+// GET /api/categories - all categories, ordered.
 router.get('/', requireAuth, async (_req, res) => {
   const categories = await prisma.category.findMany({
     orderBy: { displayOrder: 'asc' },

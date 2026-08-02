@@ -97,7 +97,7 @@ export default function DashboardPage() {
         )}
       </section>
 
-      {/* Recently used — hidden entirely when empty */}
+      {/* Recently used - hidden entirely when empty */}
       {recentlyUsed.length > 0 && (
         <section aria-labelledby="recent-heading">
           <h2 id="recent-heading" className="mb-3 text-sm font-semibold text-gray-700">

@@ -20,7 +20,7 @@ export default function App() {
         <Route path="/sign-in/*" element={<SignInPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-        {/* Authenticated app — shell provides layout + data context. */}
+        {/* Authenticated app - shell provides layout + data context. */}
         <Route
           element={
             <ProtectedRoute>

@@ -48,7 +48,7 @@ export default function AdminUsersPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Users</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Invite and remove users in the Clerk dashboard — this reflects their state here.
+          Invite and remove users in the Clerk dashboard - this reflects their state here.
         </p>
       </div>
 
@@ -77,7 +77,7 @@ export default function AdminUsersPage() {
                 return (
                   <tr key={u.id}>
                     <td className="px-4 py-3 font-medium text-gray-900">{u.email}</td>
-                    <td className="px-4 py-3 text-gray-600">{u.displayName || '—'}</td>
+                    <td className="px-4 py-3 text-gray-600">{u.displayName || '-'}</td>
                     <td className="px-4 py-3">
                       <select
                         value={u.role}

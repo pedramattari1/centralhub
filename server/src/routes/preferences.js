@@ -7,7 +7,7 @@ import { prisma } from '../lib/prisma.js';
 
 const router = Router();
 
-// GET /api/preferences — the caller's platform preferences.
+// GET /api/preferences - the caller's platform preferences.
 router.get('/', requireAuth, async (req, res) => {
   const user = await ensureUser(req);
   const preferences = await prisma.userPlatformPreference.findMany({
@@ -16,7 +16,7 @@ router.get('/', requireAuth, async (req, res) => {
   res.json({ preferences });
 });
 
-// PUT /api/preferences/:platformId — toggle visibility and/or favorite.
+// PUT /api/preferences/:platformId - toggle visibility and/or favorite.
 router.put(
   '/:platformId',
   requireAuth,
@@ -43,7 +43,7 @@ router.put(
   }
 );
 
-// POST /api/preferences/reset — restore all active platforms to visible.
+// POST /api/preferences/reset - restore all active platforms to visible.
 router.post('/reset', requireAuth, async (req, res) => {
   const user = await ensureUser(req);
   const activePlatforms = await prisma.platform.findMany({

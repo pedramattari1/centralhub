@@ -7,7 +7,7 @@ import { prisma } from '../lib/prisma.js';
 
 const router = Router();
 
-// GET /api/recently-used — the caller's 5 most recently opened platforms.
+// GET /api/recently-used - the caller's 5 most recently opened platforms.
 router.get('/', requireAuth, async (req, res) => {
   const user = await ensureUser(req);
   const recent = await prisma.recentlyUsedPlatform.findMany({
@@ -19,7 +19,7 @@ router.get('/', requireAuth, async (req, res) => {
   res.json({ recentlyUsed: recent });
 });
 
-// POST /api/recently-used/:platformId — record a platform open (upsert timestamp).
+// POST /api/recently-used/:platformId - record a platform open (upsert timestamp).
 router.post(
   '/:platformId',
   requireAuth,

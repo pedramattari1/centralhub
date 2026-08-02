@@ -38,7 +38,7 @@ async function request(path, { token, method = 'GET', body } = {}) {
 }
 
 /**
- * useApi() — returns get/post/put/del helpers that automatically attach the
+ * useApi() - returns get/post/put/del helpers that automatically attach the
  * current Clerk session token to each request.
  */
 export function useApi() {

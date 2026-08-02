@@ -14,7 +14,7 @@ function ShellContent() {
   if (loading) return <FullPageSpinner />;
 
   // A 403 during initial load means the caller isn't an org member (or was
-  // deactivated) — requireAuth rejects with 403 before any data loads.
+  // deactivated) - requireAuth rejects with 403 before any data loads.
   if (error?.status === 403) {
     return <Navigate to="/unauthorized" replace />;
   }

@@ -57,20 +57,20 @@ The Vite dev server proxies `/api` to `localhost:3001`, so leave `VITE_API_BASE_
 
 ## Environment Variables
 
-**server/.env** — `DATABASE_URL`, `CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY`, `FRONTEND_URL` (required); `ADMIN_CLERK_USER_ID`, `CLERK_ORG_ID`, `PORT` (optional). The server validates required vars on startup and exits with a clear message if any are missing.
+**server/.env** - `DATABASE_URL`, `CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY`, `FRONTEND_URL` (required); `ADMIN_CLERK_USER_ID`, `CLERK_ORG_ID`, `PORT` (optional). The server validates required vars on startup and exits with a clear message if any are missing.
 
-**client/.env** — `VITE_CLERK_PUBLISHABLE_KEY` (required); `VITE_API_BASE_URL` (blank in dev, the Railway backend origin in production).
+**client/.env** - `VITE_CLERK_PUBLISHABLE_KEY` (required); `VITE_API_BASE_URL` (blank in dev, the Railway backend origin in production).
 
 ## Deployment
 
-### Backend — Railway
+### Backend - Railway
 1. Create a Railway project and add a **PostgreSQL** service; copy its connection string to `DATABASE_URL`.
 2. Deploy the `server/` directory. Start command: `npm start`.
 3. Set env vars: `DATABASE_URL`, `CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY`, `ADMIN_CLERK_USER_ID`, `CLERK_ORG_ID`, `FRONTEND_URL` (your Vercel origin).
 4. On first deploy run: `npx prisma migrate deploy && npm run seed`.
 5. Health check path: `/healthz`.
 
-### Frontend — Vercel
+### Frontend - Vercel
 1. Import the `client/` directory. Build command `npm run build`, output `dist`.
 2. Set env vars: `VITE_CLERK_PUBLISHABLE_KEY`, `VITE_API_BASE_URL` (your Railway backend origin).
 3. `vercel.json` already configures the SPA rewrite (all routes → `index.html`).
@@ -81,4 +81,4 @@ The Vite dev server proxies `/api` to `localhost:3001`, so leave `VITE_API_BASE_
 - All platform URLs validated as `https://` on create/update (Zod). Other schemes are rejected.
 - External links open with `target="_blank"` and `rel="noopener noreferrer"`.
 - CORS restricted to `FRONTEND_URL`; rate limiting on auth-sync and admin routes.
-- No third-party credentials are stored anywhere. Placeholder URLs ship in the seed — the admin updates real URLs after deployment.
+- No third-party credentials are stored anywhere. Placeholder URLs ship in the seed - the admin updates real URLs after deployment.

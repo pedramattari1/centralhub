@@ -16,8 +16,8 @@ export default function SettingsPage() {
       </div>
 
       <Card className="divide-y divide-gray-100">
-        <Row label="Name" value={user?.displayName || '—'} />
-        <Row label="Email" value={user?.email || '—'} />
+        <Row label="Name" value={user?.displayName || '-'} />
+        <Row label="Email" value={user?.email || '-'} />
         <Row label="Role" value={user?.isAdmin ? 'Administrator' : 'Member'} />
       </Card>
 

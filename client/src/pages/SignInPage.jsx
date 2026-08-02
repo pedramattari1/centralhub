@@ -14,7 +14,7 @@ export default function SignInPage() {
         <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
           Central<span className="text-accent-600">Hub</span>
         </h1>
-        <p className="mt-1 text-sm text-gray-500">The Fay San Jose — team platform launchpad</p>
+        <p className="mt-1 text-sm text-gray-500">The Fay San Jose - team platform launchpad</p>
       </div>
       <SignIn routing="path" path="/sign-in" signUpUrl="/sign-in" fallbackRedirectUrl="/" />
     </div>

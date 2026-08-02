@@ -4,7 +4,7 @@ import { prisma } from '../lib/prisma.js';
 
 const router = Router();
 
-// GET /api/platforms — all active platforms (for directory/browse).
+// GET /api/platforms - all active platforms (for directory/browse).
 router.get('/', requireAuth, async (_req, res) => {
   const platforms = await prisma.platform.findMany({
     where: { isActive: true },

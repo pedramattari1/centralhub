@@ -15,7 +15,7 @@ import adminRoutes from './routes/admin.js';
 validateEnv();
 
 const app = express();
-app.set('trust proxy', 1); // behind Railway's proxy — needed for rate limiting
+app.set('trust proxy', 1); // behind Railway's proxy - needed for rate limiting
 
 // CORS: only the configured frontend origin may call the API.
 app.use(
@@ -27,7 +27,7 @@ app.use(
 
 app.use(express.json());
 
-// Health check for Railway — must not depend on Clerk, so mount before it.
+// Health check for Railway - must not depend on Clerk, so mount before it.
 app.get('/healthz', (_req, res) => res.json({ status: 'ok' }));
 
 app.use(clerkAuth); // verifies Clerk JWT (if present) on every API request

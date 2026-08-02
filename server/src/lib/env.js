@@ -11,7 +11,7 @@ const REQUIRED = [
 ];
 
 // ADMIN_CLERK_USER_ID is optional (only needed for seeding the admin record).
-// CLERK_ORG_ID is optional — disambiguates which org grants access if a user
+// CLERK_ORG_ID is optional - disambiguates which org grants access if a user
 // belongs to more than one. If unset, any org membership is accepted.
 const OPTIONAL = ['ADMIN_CLERK_USER_ID', 'CLERK_ORG_ID', 'PORT'];
 

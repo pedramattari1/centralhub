@@ -46,7 +46,7 @@ export async function requireAuth(req, res, next) {
       return res.status(403).json({ error: 'Not a member of CentralHub', code: 'NOT_ORG_MEMBER' });
     }
 
-    // Local profile is optional here — /api/auth/sync creates it on first login.
+    // Local profile is optional here - /api/auth/sync creates it on first login.
     const user = await prisma.user.findUnique({ where: { clerkUserId: userId } });
     if (user && !user.isActive) {
       return res.status(403).json({ error: 'Account deactivated', code: 'DEACTIVATED' });
