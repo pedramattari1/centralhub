@@ -1,3 +1,4 @@
+import 'express-async-errors'; // routes async route-handler rejections to the error middleware (Express 4)
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
@@ -13,6 +14,15 @@ import recentlyUsedRoutes from './routes/recentlyUsed.js';
 import adminRoutes from './routes/admin.js';
 
 validateEnv();
+
+// Last-resort safety net: log unexpected async failures instead of letting the
+// process terminate. A single bad request must never take the server down.
+process.on('unhandledRejection', (reason) => {
+  console.error('[unhandledRejection]', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[uncaughtException]', err);
+});
 
 const app = express();
 app.set('trust proxy', 1); // behind Railway's proxy - needed for rate limiting
