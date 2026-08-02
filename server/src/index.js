@@ -17,10 +17,20 @@ validateEnv();
 const app = express();
 app.set('trust proxy', 1); // behind Railway's proxy - needed for rate limiting
 
-// CORS: only the configured frontend origin may call the API.
+// CORS: only the configured frontend origin(s) may call the API.
+// FRONTEND_URL may be a comma-separated list; trailing slashes are tolerated
+// (a browser Origin header never has one, so we normalize both sides).
+const stripSlash = (s) => s.trim().replace(/\/+$/, '');
+const allowedOrigins = env.FRONTEND_URL.split(',').map(stripSlash).filter(Boolean);
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin(origin, callback) {
+      // Allow non-browser requests (no Origin) and any allowlisted origin.
+      if (!origin || allowedOrigins.includes(stripSlash(origin))) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Origin not allowed by CORS: ${origin}`));
+    },
     credentials: true,
   })
 );
