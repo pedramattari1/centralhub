@@ -1,0 +1,98 @@
+// CentralHub Prisma schema
+// Postgres (Railway). Admin authority is Clerk org role — the DB `role`
+// field is a non-authoritative cache synced on login, never the auth gate.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String   @id @default(cuid())
+  clerkUserId        String   @unique
+  email              String   @unique
+  displayName        String?
+  role               Role     @default(MEMBER)
+  isActive           Boolean  @default(true)
+  onboardingComplete Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  preferences  UserPlatformPreference[]
+  recentlyUsed RecentlyUsedPlatform[]
+}
+
+model Platform {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  description    String
+  url            String
+  iconName       String // Lucide icon name or custom identifier
+  categoryId     String
+  category       Category @relation(fields: [categoryId], references: [id])
+  displayOrder   Int      @default(0)
+  isActive       Boolean  @default(true)
+  isFeatured     Boolean  @default(false)
+  searchKeywords String[] // additional search terms
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  preferences  UserPlatformPreference[]
+  recentlyUsed RecentlyUsedPlatform[]
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String     @unique
+  slug         String     @unique
+  displayOrder Int        @default(0)
+  platforms    Platform[]
+}
+
+model UserPlatformPreference {
+  id         String   @id @default(cuid())
+  userId     String
+  platformId String
+  isVisible  Boolean  @default(true)
+  isFavorite Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform Platform @relation(fields: [platformId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platformId])
+}
+
+model RecentlyUsedPlatform {
+  id         String   @id @default(cuid())
+  userId     String
+  platformId String
+  usedAt     DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform Platform @relation(fields: [platformId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platformId])
+  @@index([userId, usedAt(sort: Desc)])
+}
+
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  adminUserId String
+  action      String // e.g. "PLATFORM_CREATED", "USER_REMOVED", "PLATFORM_UPDATED"
+  targetType  String // e.g. "Platform", "User", "Category"
+  targetId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
