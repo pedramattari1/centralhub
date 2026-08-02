@@ -2,10 +2,35 @@ import { clerkClient } from '@clerk/express';
 import { prisma } from '../lib/prisma.js';
 
 /**
- * Sync (create or update) the local CentralHub user profile from Clerk.
- * On FIRST login, seeds a UserPlatformPreference row (isVisible: true) for
- * every currently-active platform. Platforms created later are intentionally
- * NOT back-filled - a missing preference row means "not on my dashboard".
+ * Seed all-visible preferences for a user who has none yet. Safe to call on any
+ * login: it only acts when the user has zero preferences (first real login, or a
+ * user pre-created by the seed script). Platforms added later are intentionally
+ * NOT back-filled here - a missing row means "not on my dashboard".
+ */
+async function seedPreferencesIfEmpty(userId) {
+  const count = await prisma.userPlatformPreference.count({ where: { userId } });
+  if (count > 0) return;
+
+  const activePlatforms = await prisma.platform.findMany({
+    where: { isActive: true },
+    select: { id: true },
+  });
+  if (activePlatforms.length === 0) return;
+
+  await prisma.userPlatformPreference.createMany({
+    data: activePlatforms.map((p) => ({
+      userId,
+      platformId: p.id,
+      isVisible: true,
+      isFavorite: false,
+    })),
+    skipDuplicates: true,
+  });
+}
+
+/**
+ * Sync (create or update) the local CentralHub user profile from Clerk, then
+ * ensure preferences are seeded if the user has none. Idempotent.
  *
  * @param {string} clerkUserId
  * @param {boolean} isAdmin - resolved from the Clerk org role by the caller
@@ -25,36 +50,19 @@ export async function syncUser(clerkUserId, isAdmin) {
   // DB role is a non-authoritative cache of the Clerk org role.
   const role = isAdmin ? 'ADMIN' : 'MEMBER';
 
-  const existing = await prisma.user.findUnique({ where: { clerkUserId } });
-
-  if (existing) {
-    return prisma.user.update({
-      where: { clerkUserId },
-      data: { email: email ?? existing.email, displayName, role },
-    });
-  }
-
-  // First login: create the user and seed preferences for all active platforms.
-  const activePlatforms = await prisma.platform.findMany({
-    where: { isActive: true },
-    select: { id: true },
-  });
-
-  return prisma.user.create({
-    data: {
+  const user = await prisma.user.upsert({
+    where: { clerkUserId },
+    update: { email: email ?? undefined, displayName, role },
+    create: {
       clerkUserId,
       email: email ?? `${clerkUserId}@unknown.local`,
       displayName,
       role,
-      preferences: {
-        create: activePlatforms.map((p) => ({
-          platformId: p.id,
-          isVisible: true,
-          isFavorite: false,
-        })),
-      },
     },
   });
+
+  await seedPreferencesIfEmpty(user.id);
+  return user;
 }
 
 // Convenience: ensure the caller has a local profile, returning it.
