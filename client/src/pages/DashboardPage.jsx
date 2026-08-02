@@ -20,7 +20,7 @@ function matches(p, q) {
 }
 
 export default function DashboardPage() {
-  const { user, platforms, categories, preferences, recentlyUsed, updatePreference, recordOpen } =
+  const { user, platforms, categories, preferences, updatePreference, recordOpen } =
     useAppData();
   const { toast } = useToast();
   const [query, setQuery] = useState('');
@@ -96,20 +96,6 @@ export default function DashboardPage() {
           <p className="text-sm text-gray-400">Star your most-used platforms for quick access.</p>
         )}
       </section>
-
-      {/* Recently used - hidden entirely when empty */}
-      {recentlyUsed.length > 0 && (
-        <section aria-labelledby="recent-heading">
-          <h2 id="recent-heading" className="mb-3 text-sm font-semibold text-gray-700">
-            Recently Used
-          </h2>
-          <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-            {recentlyUsed.map((r) => (
-              <PlatformChip key={r.id} platform={r.platform} onOpen={open} />
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* My Platforms */}
       <section aria-labelledby="platforms-heading">
